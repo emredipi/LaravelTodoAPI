@@ -11,7 +11,7 @@
                         <a class="nav-link" href="#">{{route.text}}</a>
                     </router-link>
                 </ul>
-                <form class="form-inline my-2 my-lg-0" @submit.prevent="search">
+                <form class="form-inline my-2 my-lg-0" @submit.prevent="search" v-if="this.$route.name==='todoList'">
                     <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="text">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>

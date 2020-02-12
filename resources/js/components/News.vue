@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="fade modal" :class="{show:showModal}" v-if="showModal" @click.self="toggle">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{activeArticle.title}}</h5>
@@ -28,7 +28,7 @@
                             <span>&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="overscroll-behavior-y: auto">
                         <img :src="activeArticle.urlToImage" :alt="activeArticle.title" class="card-img-top">
                         <p>{{activeArticle.description}}</p>
                     </div>

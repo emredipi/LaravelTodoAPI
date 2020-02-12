@@ -6,19 +6,22 @@
             <form class="form-inline" @submit.prevent="addNewTodo">
                 <div class="input-group w-100">
                     <input class="form-control-lg" type="text" autofocus placeholder="Type..." v-model="input" style="width: 85%">
-                    <span class="input-group-btn">
+                    <span class="input-group-btn" style="width: 15%;">
                         <button class="btn btn-primary btn-lg" type="submit">Add</button>
                     </span>
                 </div>
             </form>
             <div class="btn-group mt-4 text-center w-100">
-                <button v-for="button in buttons" class="btn" :class="{'btn-primary':button.id===activeButton,'btn-outline-primary':button.id!==activeButton,}" @click="changeType(button)">
+                <button v-for="button in buttons" class="btn" :class="{'btn-primary':button.id===activeButton,'btn-outline-primary':button.id!==activeButton}" @click="changeType(button)">
                     {{button.text}}
                 </button>
             </div>
-            <ul>
-                <li v-for="todo in filteredTodos">
-                    <label class="todo" @click="toggle(todo)">
+            <div class="mt-4 alert alert-warning h4" v-if="search" @click="search=''">
+                Search filtered by: <b v-text="search" />
+            </div>
+            <ol class="mt-4">
+                <li v-for="todo in filteredTodos" class="row">
+                    <label class="todo col-10" @click="toggle(todo)">
                         <del v-if="todo.done">
                             {{ todo.text }}
                         </del>
@@ -26,11 +29,13 @@
                             {{ todo.text }}
                         </span>
                     </label>
-                    <button @click="deleteTodo(todo)" class="btn btn-danger">
-                        X
-                    </button>
+                    <div class="col-2">
+                        <button @click="deleteTodo(todo)" class="btn btn-danger">
+                            X
+                        </button>
+                    </div>
                 </li>
-            </ul>
+            </ol>
         </div>
     </div>
 </template>

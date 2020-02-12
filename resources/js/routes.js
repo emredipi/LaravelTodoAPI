@@ -13,6 +13,7 @@ export default {
         {
             path:'/list',
             component:TodoList,
+            name:"todoList",
             text:"list"
         },
         {
