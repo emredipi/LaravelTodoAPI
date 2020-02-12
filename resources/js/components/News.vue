@@ -1,7 +1,10 @@
 <template>
-    <div class="container">
+    <div class="container" @keydown="toggle">
         <div class="card-header h1 mb-3">
             News
+            <button class="float-right btn btn-primary" @click="fetchNews" :disabled="loading">
+                {{this.loading?"Loading...":"Refresh News"}}
+            </button>
         </div>
         <div class="row">
             <div v-for="article in articles" class="col-md-3 mb-2">
@@ -16,8 +19,8 @@
                 </div>
             </div>
         </div>
-        <div class="fade modal" tabindex="-1" :class="{show:showModal}" v-if="showModal">
-            <div class="modal-dialog" @keydown.esc="toggle">
+        <div class="fade modal" :class="{show:showModal}" v-if="showModal" @click.self="toggle">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{activeArticle.title}}</h5>
@@ -46,19 +49,12 @@
             return {
                 articles:[],
                 activeArticle:null,
-                showModal:false
+                showModal:false,
+                loading:true,
             }
         },
         mounted() {
-            let url = 'https://newsapi.org/v2/top-headlines?' +
-                'country=tr&' +
-                'apiKey=a7a9b27383524b4db68fc159218fc201';
-            let req = new Request(url);
-            fetch(req)
-                .then(response=>response.json())
-                .then(response=>{
-                   this.articles=response.articles;
-                });
+            this.fetchNews();
         },
         methods:{
             toggle(){
@@ -67,6 +63,23 @@
             setActiveArticle(article){
                 this.activeArticle=article;
                 this.toggle();
+            },
+            fetchNews(){
+                this.loading=true;
+                this.articles=[];
+                let url = 'https://newsapi.org/v2/top-headlines?' +
+                    'country=tr&' +
+                    'apiKey=a7a9b27383524b4db68fc159218fc201';
+                let req = new Request(url);
+                fetch(req)
+                    .then(response=>response.json())
+                    .then(response=>{
+                        this.articles=response.articles;
+                    })
+                    .catch(err=>console.log(err))
+                    .then(()=>{
+                        this.loading=false;
+                    });
             }
         }
 
