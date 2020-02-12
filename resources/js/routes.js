@@ -1,5 +1,6 @@
 import Home from './components/Home';
 import TodoList from "./components/TodoList";
+import News from "./components/News";
 export default {
     mode: "history",
     routes:[
@@ -13,6 +14,11 @@ export default {
             path:'/list',
             component:TodoList,
             text:"list"
+        },
+        {
+            path:'/news',
+            component:News,
+            text:"News"
         }
     ]
 }
