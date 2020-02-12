@@ -1,5 +1,5 @@
 <template>
-    <div class="card col-md-6 offset-3 mt-1" style="position:relative">
+    <div class="card col-md-6 offset-md-3">
         <div class="card-header h1">Todo List</div>
         <div class="card-body">
             <div class="loader" v-if="loading"></div>
@@ -11,7 +11,7 @@
                     </span>
                 </div>
             </form>
-            <div class="form-group mt-4 text-center">
+            <div class="btn-group mt-4 text-center w-100">
                 <button v-for="button in buttons" class="btn" :class="{'btn-primary':button.id===activeButton,'btn-outline-primary':button.id!==activeButton,}" @click="changeType(button)">
                     {{button.text}}
                 </button>
@@ -58,7 +58,7 @@
         },
         mounted(){
             let _this=this;
-            axios.get("https://todoapp.spider/api/todo")
+            axios.get("todo")
                 .then(response=>{
                     _this.todos=response.data;
                 })
@@ -74,7 +74,7 @@
                 if(this.input!==""){
                     this.loading=true;
                     let _this=this;
-                    axios.post("https://todoapp.spider/api/todo/",{
+                    axios.post("todo",{
                         "done":false,
                         "text":_this.input
                     })
@@ -97,8 +97,8 @@
             deleteTodo(todo){
                 this.loading=true;
                 let _this=this;
-                axios.delete("https://todoapp.spider/api/todo/"+todo.id)
-                    .then(reponse=>{
+                axios.delete("todo/"+todo.id)
+                    .then(response=>{
                         _this.todos=_this.todos.filter(t=>t.id!==todo.id);
                         _this.loading = false;
                     }).catch(error=>{
@@ -111,18 +111,11 @@
             toggle: function(todo){
                 if(!this.loading){
                     this.loading=true;
-                    fetch("https://todoapp.spider/api/todo/"+todo.id,{
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            "done":!todo.done
-                        }),
+                    axios.put("todo/"+todo.id,{
+                        "done":!todo.done
                     })
-                        .then(r=>r.json())
                         .then(response=>{
-                            todo.done = response.done;
+                            todo.done = response.data.done;
                             this.loading = false;
                         });
                 }
@@ -150,14 +143,15 @@
         border: 4px solid #f3f3f3;
         border-top: 4px solid #3498db;
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         animation: spin 0.5s linear infinite;
-        position: absolute;
-        top: 30px;
+        position: fixed;
+        top: 70px;
         right: 30px;
     }
-    input[type=checkbox] {
-        display: none;
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 </style>

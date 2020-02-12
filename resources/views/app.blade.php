@@ -7,12 +7,13 @@
     <title>Laravel Todo App with Vue</title>
     <!-- Fonts -->
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/lumen/bootstrap.min.css" rel="stylesheet">
+    <link href="{{mix('css/app.css')}}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 </head>
 <body>
     <div id="app">
         <navbar :routes="routes"></navbar>
-        <div class="container">
+        <div class="container pt-3">
             <router-view></router-view>
         </div>
     </div>

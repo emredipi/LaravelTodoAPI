@@ -2,11 +2,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="#">Todo App</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" @click="toggle">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <div class="collapse navbar-collapse" id="navbarColor01">
+            <div class="collapse navbar-collapse" :class="{show:isMenuOpen}">
                 <ul class="navbar-nav mr-auto">
                     <router-link tag="li" active-class="active" v-for="route in routes" class="nav-item" :to="route.path" v-bind:key="route.path">
                         <a class="nav-link" href="#">{{route.text}}</a>
@@ -27,13 +26,17 @@
         props: ['routes'],
         data(){
             return {
-                text:""
+                text:"",
+                isMenuOpen:false,
             }
         },
         methods:{
             search(){
                 window.EventBus.$emit("search",this.text);
                 this.text="";
+            },
+            toggle(){
+                this.isMenuOpen=!this.isMenuOpen;
             }
         }
     }
