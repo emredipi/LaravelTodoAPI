@@ -69,7 +69,7 @@
                 this.articles=[];
                 let url = 'https://newsapi.org/v2/top-headlines?' +
                     'country=tr&' +
-                    'apiKey=a7a9b27383524b4db68fc159218fc201';
+                    'apiKey='+process.env.MIX_NEWS_API_KEY;
                 let req = new Request(url);
                 fetch(req)
                     .then(response=>response.json())
