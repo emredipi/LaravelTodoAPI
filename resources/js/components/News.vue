@@ -2,9 +2,21 @@
     <div class="container" @keydown="toggle">
         <div class="card-header h1 mb-3">
             News
-            <button class="float-right btn btn-primary" @click="fetchNews" :disabled="loading">
-                {{this.loading?"Loading...":"Refresh News"}}
-            </button>
+            <div class="form-inline float-right">
+                <label>
+                    <select class="form-control" v-model="category">
+                        <option
+                            v-for="category in categories()"
+                            :value="category"
+                        >
+                            {{category}}
+                        </option>
+                    </select>
+                </label>
+                <button class="float-right btn btn-primary" @click="fetchNews" :disabled="loading">
+                    {{this.loading?"Loading...":"Refresh News"}}
+                </button>
+            </div>
         </div>
         <div class="row">
             <div v-for="article in articles" class="col-md-3 mb-2">
@@ -51,12 +63,30 @@
                 activeArticle:null,
                 showModal:false,
                 loading:true,
+                category:"General",
             }
         },
         mounted() {
             this.fetchNews();
         },
+        watch: {
+            category: function () {
+                this.fetchNews();
+            }
+        },
         methods:{
+            categories:()=>{
+                return {
+                    "general":"General",
+                    "business":"Business",
+                    "entertainment":"Entertainment",
+                    "health":"Health",
+                    "science":"Science",
+                    "sports":"Sports",
+                    "technology":"Technology",
+                }
+            },
+
             toggle(){
                 this.showModal=!this.showModal;
             },
@@ -69,6 +99,7 @@
                 this.articles=[];
                 let url = 'https://newsapi.org/v2/top-headlines?' +
                     'country=tr&' +
+                    'category='+this.category+'&'+
                     'apiKey='+process.env.MIX_NEWS_API_KEY;
                 let req = new Request(url);
                 fetch(req)
