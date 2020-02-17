@@ -1,25 +1,27 @@
 <template>
     <div class="container" @keydown="toggle">
-        <div class="card-header h1 mb-3">
-            News
-            <div class="form-inline float-right">
-                <label>
-                    <select class="form-control" v-model="category">
-                        <option
-                            v-for="category in categories()"
-                            :value="category"
-                        >
-                            {{category}}
-                        </option>
-                    </select>
-                </label>
-                <button class="float-right btn btn-primary" @click="fetchNews" :disabled="loading">
-                    {{this.loading?"Loading...":"Refresh News"}}
-                </button>
+        <div class="row card-header h1 mb-3">
+            <div class="col-sm-12 col-md-8">News</div>
+            <div class="col-sm-12 col-md-4">
+                <div class="float-right">
+                    <label>
+                        <select class="form-control" v-model="category">
+                            <option
+                                v-for="category in categories()"
+                                :value="category"
+                            >
+                                {{category}}
+                            </option>
+                        </select>
+                        <button class="btn btn-primary btn-group-sm w-100" @click="fetchNews" :disabled="loading">
+                            {{this.loading?"Loading...":"Refresh News"}}
+                        </button>
+                    </label>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div v-for="article in articles" class="col-md-3 mb-2">
+            <div v-for="article in articles" class="col-sm-6 col-md-4 col-lg-3 mb-2">
                 <div class="card" @click="setActiveArticle(article)">
                     <img :src="article.urlToImage" :alt="article.title" class="card-img-top">
                     <div class="card-body">

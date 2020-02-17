@@ -10,6 +10,19 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+let url = process.env.APP_URL.replace(/(^\w+:|^)\/\//, '');
+mix.options({
+    hmrOptions: {
+        host: url,
+        port: 8080
+    }
+});
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css').version();
+    .sass('resources/sass/app.scss', 'public/css');
+mix.disableSuccessNotifications();
+if(mix.inProduction()){
+    mix.version();
+}else{
+    mix.sourceMaps();
+}
