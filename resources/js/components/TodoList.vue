@@ -4,6 +4,9 @@
         <div class="card-body">
             <div class="loader" v-if="loading"></div>
             <form class="form-inline" @submit.prevent="addNewTodo">
+                <select class="form-control mb-2 w-100" v-model="currentTagID" @change="fetchTodos">
+                    <option v-for="tag in tags" :value="tag.id">{{tag.name}}</option>
+                </select>
                 <div class="input-group w-100">
                     <input class="form-control-lg" type="text" autofocus placeholder="Type..." v-model="input" style="width: 85%">
                     <span class="input-group-btn" style="width: 15%;">
@@ -46,6 +49,8 @@
             return {
                 input:"",
                 todos:[],
+                tags:[],
+                currentTagID:0,
                 search:"",
                 loading:true,
                 activeButton:0,
@@ -62,58 +67,55 @@
             });
         },
         mounted(){
-            let _this=this;
-            axios.get("todo")
+            axios.get("tag")
                 .then(response=>{
-                    _this.todos=response.data;
+                    this.tags=response.data;
+                    this.currentTagID=response.data[0].id;
+                    this.fetchTodos();
                 })
                 .catch(function (error) {
                     console.log(error);
-                })
-                .then(()=>{
-                    _this.loading=false;
                 });
         },
         methods: {
             addNewTodo(){
                 if(this.input!==""){
                     this.loading=true;
-                    let _this=this;
                     axios.post("todo",{
+                        "tag":this.currentTagID,
                         "done":false,
-                        "text":_this.input
+                        "text":this.input
                     })
                         .then(response=>{
-                            _this.todos.push(response.data);
-                            _this.input="";
-                            _this.loading = false;
-                            _this.search="";
-                            if(_this.activeButton===1)
-                                _this.activeButton=2;
+                            this.todos.push(response.data);
+                            this.input="";
+                            this.loading = false;
+                            this.search="";
+                            if(this.activeButton===1)
+                                this.activeButton=2;
                         })
                         .catch(function (error) {
                             console.log(error);
                         })
                         .then(()=>{
-                            _this.loading=false;
+                            this.loading=false;
                         });
                 }
             },
             deleteTodo(todo){
                 this.loading=true;
-                let _this=this;
                 axios.delete("todo/"+todo.id)
                     .then(response=>{
-                        _this.todos=_this.todos.filter(t=>t.id!==todo.id);
-                        _this.loading = false;
+                        this.todos=this.todos.filter(t=>t.id!==todo.id);
+                        this.loading = false;
                     }).catch(error=>{
                         console.log(error);
                     }).then(()=>{
-                        _this.loading=false;
-                        _this.search="";
+                        this.loading=false;
+                        this.search="";
                     });
             },
-            toggle: function(todo){
+            toggle(todo){
                 if(!this.loading){
                     this.loading=true;
                     axios.put("todo/"+todo.id,{
@@ -124,6 +126,18 @@
                             this.loading = false;
                         });
                 }
+            },
+            fetchTodos(){
+                axios.get("todo?tag="+this.currentTagID)
+                    .then(response=>{
+                        this.todos=response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                    .then(()=>{
+                        this.loading=false;
+                    });
             },
             changeType(button){
                 this.activeButton=button.id;
@@ -136,7 +150,7 @@
                     return todo.text.toLowerCase().includes(this.search.toLowerCase())
                 });
             }
-        }
+        },
     }
 </script>
 

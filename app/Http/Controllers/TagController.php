@@ -3,26 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Tag;
-use App\Todo;
 use Illuminate\Http\Request;
 
-class TodoController extends Controller
+class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if($request->has('tag')){
-            $tag=Tag::findOrFail($request->tag);
-            $todos=$tag->todos;
-        }
-        else {
-            $todos=Todo::all();
-        }
-        return response($todos,200);
+        $tags=Tag::all();
+        return response($tags,200);
     }
 
     /**
@@ -33,44 +26,43 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        $tag=Tag::findOrFail($request->tag);
-        $response=$tag->todos()->create($request->all());
+        $response=Tag::create($request->all());
         return response($response,200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Todo  $todo
+     * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function show(Todo $todo)
+    public function show(Tag $tag)
     {
-        return response($todo,200);
+        return response($tag,200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Todo  $todo
+     * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Todo $todo)
+    public function update(Request $request, Tag $tag)
     {
-        $todo->update($request->all());
-        return response($todo,200);
+        $response=$tag->update($request->all());
+        return response($response,200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Todo  $todo
+     * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Todo $todo)
+    public function destroy(Tag $tag)
     {
-        $todo->delete();
-        return response("Deleted Successfully",200);
+        $response=$tag->delete();
+        return response($response,200);
     }
 }
