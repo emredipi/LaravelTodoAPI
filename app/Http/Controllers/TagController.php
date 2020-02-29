@@ -63,6 +63,6 @@ class TagController extends Controller
     public function destroy(Tag $tag)
     {
         $response=$tag->delete();
-        return response($response,200);
+        return response("Deleted Successfully",200);
     }
 }
